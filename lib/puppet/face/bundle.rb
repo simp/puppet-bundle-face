@@ -44,5 +44,19 @@ Puppet::Face.define(:bundle, '0.1.0') do
       puts "  #{description}" if description
     nil
     end
+    def zip(src, destdir=Puppet[:vardir])
+      # Zip up dest dir for bundle
+      File.open("#{destdir}/puppet_bundle.tar.gz", "wb") do |file|
+        Zlib::GzipWriter.wrap(file) do |gz|                                                                                                                            
+          Gem::Package::TarWriter.new(gz) do |tar|    
+            Find.find(src) do |to_add|
+              next if File.directory?(to_add)
+              mode = File.stat(to_add).mode
+              tar.add_file_simple(to_add, mode, to_add.length)
+            end  
+          end  
+        end  
+      end  
+    end
   end
 end
