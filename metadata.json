@@ -1,0 +1,12 @@
+{
+  "name": "simp-puppetbundle",
+  "version": "0.1.0",
+  "author": "SIMP Team",
+  "summary": "Puppet face to bundle a standalone Puppet environment",
+  "license": "Apache-2.0",
+  "project_page": "https://github.com/simp/puppet-bundle-face",
+  "source": "https://github.com/simp/puppet-bundle-face",
+  "issues_url": "https://simp-project.atlassian.net",
+  "dependencies": [],
+  "data_provider": null
+}
