@@ -4,42 +4,43 @@ require 'puppet/face'
 require 'puppet/resource/catalog'
 require 'puppet/util/colors'
 
-Puppet::Face.define(:ls, '1.0.0') do
+Puppet::Face.define(:bundle, '0.1.0') do
   extend Puppet::Util::Colors
 
   license "Apache-2.0"
   copyright "SIMP Team", 2016
   author "SIMP TEAM <simp@simp-project.com>"
 
-  summary "Bundles control repo assets into a portable package that can be used with `puppet apply`"
+  summary "Bundles control repo assets into a portable (zip) package that can be used with `puppet apply`"
   action :bundle do
     default
-    summary "Bundle files and directories"
+    summary "Bundle files and directories for one-time deployments"
     description <<-'EOT'
-      Bundle files and directories
-      Reads and lists file resources from the catalog.
-      The source of the catalog can be managed with the `--catalog_terminus` and
-      the `--catalog_cache_terminus` option.
+      A puppet face that packages control repo assets into a portable (zipped) collection
+      that can be used in a masterless context with `puppet apply`.
     EOT
     notes <<-'EOT'
-      To be able to specify the -r option without a path you need to specify the
-      subcommand as well: `puppet ls list -r`
+      I should probably add some notes here.
     EOT
     returns <<-'EOT'
       Nothing.
     EOT
-    arguments "[<path>]"
+    arguments "[<dir>]"
+    option "--dest", "-d" do
+      summary "The destination directory of the zipped bundle. $vardir by default."
+    end
+    option "--aio", "-a" do
+      summary "Bundle the Puppet AIO with the other assets."
+    end
     when_invoked do |*args|
-      options = args.pop
       if args.empty?
-        path = Dir.pwd
-      else
-        path = File.expand_path args.pop
+        STDERR.puts "You must specify a directory to bundle."
+        exit 1
       end
-      path = path[0..-2] if path.end_with? File::SEPARATOR
+      bundle_dir = args.pop
       color = :green
       description = "My face says strings!"
-      puts colorize(color, path)
+      puts colorize(color, bundle_dir)
       puts "  #{description}" if description
     nil
     end
